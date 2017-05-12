@@ -2,3 +2,12 @@
 build
 tags
 .editorconfig
+*.suo
+.vs/CarND-PID-Control-Project/v15/Browse.VC.db
+*.opendb
+.vs/CarND-PID-Control-Project/v15/ipch/AutoPCH/2c25b833/UWS-4deac183/UWS.ipch
+*.ipch
+.vs/config/applicationhost.config
+.vs/ProjectSettings.json
+*.sqlite
+.vs/VSWorkspaceState.json

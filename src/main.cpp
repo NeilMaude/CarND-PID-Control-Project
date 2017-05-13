@@ -44,9 +44,18 @@ int main()
 
   PID pid;
   // TODO: Initialize the pid variable.
-  
+  //pid.Kp = 0.1;                 // set the coefficients directly...
+  //pid.Kd = 0.9;
+  //pid.Ki = 0.01;
+  pid.Init(0.1, 0.001, 0.9);
+  std::cout << "Initialised PID" << std::endl;
+  std::cout << "Proportial   P-coeff = " << pid.Kp << std::endl;
+  std::cout << "Differential D-coeff = " << pid.Kd << std::endl;
+  std::cout << "Integral     I-coeff = " << pid.Ki << std::endl;
 
-  h.onMessage([&pid](uWS::WebSocket<uWS::SERVER> *ws, char *data, size_t length, uWS::OpCode opCode) {
+  double last_CTE = 0.0;
+
+  h.onMessage([&pid, &last_CTE](uWS::WebSocket<uWS::SERVER> *ws, char *data, size_t length, uWS::OpCode opCode) {
     // "42" at the start of the message means there's a websocket message event.
     // The 4 signifies a websocket message
     // The 2 signifies a websocket event
@@ -70,7 +79,25 @@ int main()
           */
 
           //test code 
-          steer_value = -0.2;
+          std::cout << "Last CTE value: " << last_CTE << std::endl;
+          double prop = (-1 * pid.Kp * cte);
+          double diff = (-1 * pid.Kd * cte);
+          double intg = 0.0;
+          //steer_value = (-1 * pid.Kp * cte); //+ (-1 * pid.Kd * (cte - last_CTE)) + (-1 * pid.Ki * pid.TotalError);
+          steer_value = prop + diff + intg;
+          std::cout << "Steer_value raw calc: " << steer_value << ", contributions (P,D,I) =" << prop << "," << diff << "," << intg << std::endl;
+          
+          //make sure within range
+          if (steer_value < -1) {
+            steer_value = -1;
+            std::cout << "Steer_value outside range - set to -1." << std::endl;
+          }
+          if (steer_value > 1) {
+            steer_value = 1;
+            std::cout << "Steer_value outside range - set to 1." << std::endl;
+          }
+          
+          last_CTE = cte;
 
           // DEBUG
           std::cout << "CTE: " << cte << " Steering Value: " << steer_value << std::endl;
@@ -81,6 +108,14 @@ int main()
           auto msg = "42[\"steer\"," + msgJson.dump() + "]";
           std::cout << msg << std::endl;
           (*ws).send(msg.data(), msg.length(), uWS::OpCode::TEXT);
+
+          if (abs(cte) > 2.2) {
+            // off the track, restart
+            std::string reset_msg = "42[\"reset\",{}]";
+            (*ws).send(reset_msg.data(), reset_msg.length(), uWS::OpCode::TEXT);
+            std::cout << "\n** Auto restart **\n" << std::endl;
+          }
+
         }
       }
       else {

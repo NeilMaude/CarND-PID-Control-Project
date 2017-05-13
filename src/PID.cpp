@@ -30,3 +30,6 @@ double PID::TotalError() {
 	return 1;
 }
 
+double PID::GetValue() {
+  return (-1.0 * Kp * p_error) + (-1.0 * Kd * d_error) + (-1.0 * Ki * i_error);
+}

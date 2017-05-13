@@ -6,6 +6,10 @@ set(CMAKE_CXX_FLAGS, "${CXX_FLAGS}")
 if(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
     
     include_directories(C:/vcpkg/packages/uwebsockets_x86-windows/include)
+    include_directories(C:/vcpkg/packages/libssh2_x86-windows/include)
+    include_directories(C:/vcpkg/packages/libuv_x86-windows/include)
+    include_directories(C:/vcpkg/packages/openssl_x86-windows/include)
+    include_directories(C:/vcpkg/packages/zlib_x86-windows/include)
 
     set(sources src/PID.cpp src/main.cpp)
     set_source_files_properties(${sources} PROPERTIES COMPILE_FLAGS "-D_USE_MATH_DEFINES")

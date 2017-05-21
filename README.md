@@ -2,6 +2,49 @@
 Self-Driving Car Engineer Nanodegree Program
 
 ---
+## PID Process
+The basic PID process is used to control the car steering.  This is done with PID controller class to return the steering value for the current car cross-track-error (CTE) value.
+
+Calculation of the PID controller is via the following sum:
+
+`(-1.0 * Kp * p_error) + (-1.0 * Kd * d_error) + (-1.0 * Ki * i_error)`
+
+This is simply the sum of the individual parameters * their error value (and * -1.0).
+
+## P/I/D Component Effects
+The effect of the P (proportional) component is to set a steering value proportional to the CTE value.  This will steer the car towards the centre line, but will also tend to overshoot the centre if this is the sole component of the calculation.
+
+The effect of the D (differential) component is to correct the tendency of the proportional component calculation to overshoot the centre line.  The D component error is the difference between the current and previous CTE values (i.e. the CTE at the previous time step).  
+
+The effect of the I (integral) component is to correct for a drift error due to a systemic tendency for the car to drift away from the straight ahead position.  The E component error is the sum of all previous CTE values.  
+
+## Parameter Choice
+The P/D values (control gains) were selected by manual tuning, starting with values of 1.0 and using interpolation to tune to appropriate values. 
+
+This led to values of P=0.1, D=0.9, which successfully steer the car around the circuit at the default throttle setting (throttle=0.3).
+
+Note: the I parameter was left at I=0.0 throughout, starting with the assumption that the simulation car has no systemic drift error.  This was not tested further, as the car is navigating the circuit successfully.
+
+## Results
+A recording of the performance of the current settings (P=0.1, D=0.9) can be seen at: [https://youtu.be/8TGDRP4xk0I].
+
+This shows a successful lap of the lakeshore circuit.
+
+Note: at a couple of points (notably the sharp left turn after the bridge and the following sharp right turn at the water's edge), the car gets close to the track edge - along with the remaining oscillations, this wouldn't be the best experience for passengers!
+
+## Next Steps
+The next steps are:
+
+..* Use Twiddle to refine the hyperparameters further
+..* Add a PID controller for the throttle setting, to adjust speed (either based on distance from CTE or steering angle)
+
+These refinements can potentially improve the quality of the ride or lapping at higher speeds.
+
+## Compiling on Windows
+The `CMakeLists.txt` file has been modified to allow compiling on a Windows platform, using Visual Studio 2017 (thanks to the Udacity Forums and Slack channel members for suggestions as to how to modify these settings).  Note that the paths hardcoded for the includes on Windows do not appear to have any effect and the IDE refuses to accept the path to uWS and dependencies as correct, but the project compiles fine...
+
+(Why not Ubuntu?  The simulator now requires OpenGL3, which is ahead of the capabilites of the VMware environment used for previous simulator projects e.g. Behavioural Cloning - so getting the code to compile on Windows was less hassle than getting the simulator to work on Ubuntu.)
+---
 
 ## Dependencies
 

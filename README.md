@@ -50,7 +50,8 @@ Why does the solution run slowly on Ubuntu?  The simulator now requires OpenGL3,
 
 Note: launch settings for the simulator:
 `LIBGL_ALWAYS_SOFTWARE=1 ./term2_sim.x86_64`
-
+Log file for simulator (when it crashes due to no OpenGL3 support):
+`~/.config/unity3d/Udacity/self_driving_car_nanodegree_program/Player.log`
 ---
 
 ## Dependencies

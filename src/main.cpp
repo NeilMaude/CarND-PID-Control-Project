@@ -17,8 +17,6 @@ constexpr double pi() { return M_PI; }
 double deg2rad(double x) { return x * pi() / 180; }
 double rad2deg(double x) { return x * 180 / pi(); }
 
-
-
 // Checks if the SocketIO event has JSON data.
 // If there is data the JSON object in string format will be returned,
 // else the empty string "" will be returned.
@@ -49,14 +47,15 @@ int main()
   //pid.Ki = 0.01;
   pid.Init(0.1, 0.0, 0.9);
   std::cout << "Initialised PID" << std::endl;
-  std::cout << "Proportial   P-coeff = " << pid.Kp << std::endl;
-  std::cout << "Differential D-coeff = " << pid.Kd << std::endl;
-  std::cout << "Integral     I-coeff = " << pid.Ki << std::endl;
+  std::cout << "Proportional   P-coeff = " << pid.Kp << std::endl;
+  std::cout << "Differential   D-coeff = " << pid.Kd << std::endl;
+  std::cout << "Integral       I-coeff = " << pid.Ki << std::endl;
 
   //double last_CTE = 0.0;
 
   //h.onMessage([&pid, &last_CTE](uWS::WebSocket<uWS::SERVER> *ws, char *data, size_t length, uWS::OpCode opCode) {
-  h.onMessage([&pid](uWS::WebSocket<uWS::SERVER> *ws, char *data, size_t length, uWS::OpCode opCode) {
+  //h.onMessage([&pid](uWS::WebSocket<uWS::SERVER> *ws, char *data, size_t length, uWS::OpCode opCode) {
+  h.onMessage([&pid](uWS::WebSocket<uWS::SERVER> ws, char *data, size_t length, uWS::OpCode opCode) {
   // "42" at the start of the message means there's a websocket message event.
     // The 4 signifies a websocket message
     // The 2 signifies a websocket event
@@ -110,10 +109,10 @@ int main()
 
           json msgJson;
           msgJson["steering_angle"] = steer_value;
-          msgJson["throttle"] = 0.3;
+          msgJson["throttle"] = 0.1;
           auto msg = "42[\"steer\"," + msgJson.dump() + "]";
           std::cout << msg << std::endl;
-          (*ws).send(msg.data(), msg.length(), uWS::OpCode::TEXT);
+          ws.send(msg.data(), msg.length(), uWS::OpCode::TEXT);
 
           /*
           if (abs(cte) > 2.2) {
@@ -128,17 +127,32 @@ int main()
       else {
         // Manual driving
         std::string msg = "42[\"manual\",{}]";
-        (*ws).send(msg.data(), msg.length(), uWS::OpCode::TEXT);
+        ws.send(msg.data(), msg.length(), uWS::OpCode::TEXT);
       }
     }
   });
 
-  h.onConnection([&h](uWS::WebSocket<uWS::SERVER> *ws, uWS::HttpRequest req) {
+  // We don't need this since we're not using HTTP but if it's removed the program
+  // doesn't compile :-(
+  h.onHttpRequest([](uWS::HttpResponse *res, uWS::HttpRequest req, char *data, size_t, size_t) {
+    const std::string s = "<h1>Hello world!</h1>";
+    if (req.getUrl().valueLength == 1)
+    {
+      res->end(s.data(), s.length());
+    }
+    else
+    {
+      // i guess this should be done more gracefully?
+      res->end(nullptr, 0);
+    }
+  });
+
+  h.onConnection([&h](uWS::WebSocket<uWS::SERVER> ws, uWS::HttpRequest req) {
     std::cout << "Connected!!!" << std::endl;
   });
 
-  h.onDisconnection([&h](uWS::WebSocket<uWS::SERVER> *ws, int code, char *message, size_t length) {
-    (*ws).close();
+  h.onDisconnection([&h](uWS::WebSocket<uWS::SERVER> ws, int code, char *message, size_t length) {
+    ws.close();
     std::cout << "Disconnected" << std::endl;
   });
 
@@ -153,4 +167,5 @@ int main()
     return -1;
   }
   h.run();
+
 }

@@ -28,9 +28,11 @@ Note: the I parameter was left at I=0.0 throughout, starting with the assumption
 ## Results
 A recording of the performance of the current settings (P=0.1, D=0.9) can be seen at: [https://youtu.be/8TGDRP4xk0I].
 
-This shows a successful lap of the lakeshore circuit.
+This shows a successful lap of the lakeshore circuit at throttle = 0.3.  
 
 Note: at a couple of points (notably the sharp left turn after the bridge and the following sharp right turn at the water's edge), the car gets close to the track edge - along with the remaining oscillations, this wouldn't be the best experience for passengers!
+
+Note also that the above video was recorded on a Windows machine using uWebSockets v14 and with OpenGL3 graphics suppport.  To meet the grading requirements, the project has been modified to use uWebSockets v13.  Unfortunately this means using Ubuntu (messing about with the dependencies on Windows is very fiddly) and my Ubuntu VM doesn't support OpenGL3 - as the Udacity simulator for term2 requires OpenGL3, I'm having to use software OpenGL.  The net effect of this is that the system runs too slowly to work at the higher throttle settings.  Hence setting throttle = 0.1 and running really slowly... 
 
 ## Next Steps
 The next steps are:
@@ -43,7 +45,12 @@ These refinements can potentially improve the quality of the ride or lapping at 
 ## Compiling on Windows
 The `CMakeLists.txt` file has been modified to allow compiling on a Windows platform, using Visual Studio 2017 (thanks to the Udacity Forums and Slack channel members for suggestions as to how to modify these settings).  Note that the paths hardcoded for the includes on Windows do not appear to have any effect and the IDE refuses to accept the path to uWS and dependencies as correct, but the project compiles fine...
 
-(Why not Ubuntu?  The simulator now requires OpenGL3, which is ahead of the capabilites of the VMware environment used for previous simulator projects e.g. Behavioural Cloning - so getting the code to compile on Windows was less hassle than getting the simulator to work on Ubuntu.)
+## Ubuntu
+Why does the solution run slowly on Ubuntu?  The simulator now requires OpenGL3, which is ahead of the capabilites of the VMware environment used for previous simulator projects e.g. Behavioural Cloning.  Setting up on Windows (using vcpkg) ends up with uWebSockets v14 and the grading process requires v13.  It's much each easier to get a working setup on Ubuntu, but then there is the issue of OpenGL3 support required by the latest Udacity simulator version - running software emulation, within VMWare, instead of hardware graphics in the host O/S is painfully slow (even on an i7), hence slowing down the throttle setting.
+
+Note: launch settings for the simulator:
+`LIBGL_ALWAYS_SOFTWARE=1 ./term2_sim.x86_64`
+
 ---
 
 ## Dependencies

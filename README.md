@@ -48,10 +48,12 @@ The `CMakeLists.txt` file has been modified to allow compiling on a Windows plat
 ## Ubuntu
 Why does the solution run slowly on Ubuntu?  The simulator now requires OpenGL3, which is ahead of the capabilites of the VMware environment used for previous simulator projects e.g. Behavioural Cloning.  Setting up on Windows (using vcpkg) ends up with uWebSockets v14 and the grading process requires v13.  It's much each easier to get a working setup on Ubuntu, but then there is the issue of OpenGL3 support required by the latest Udacity simulator version - running software emulation, within VMWare, instead of hardware graphics in the host O/S is painfully slow (even on an i7), hence slowing down the throttle setting.
 
-Note: launch settings for the simulator:
+Launch settings for the simulator
 `LIBGL_ALWAYS_SOFTWARE=1 ./term2_sim.x86_64`
-Log file for simulator (when it crashes due to no OpenGL3 support):
+
+Log file for simulator (when it crashes due to no OpenGL3 support)
 `~/.config/unity3d/Udacity/self_driving_car_nanodegree_program/Player.log`
+
 ---
 
 ## Dependencies
